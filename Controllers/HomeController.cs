@@ -29,13 +29,14 @@ namespace EstoqueVendasSQLITE.Controllers
                 {
                     ProdutoNome = g.Key,
                     Quantidade = g.Count(),
-                    TotalPrecoCusto = g.Sum(e => e.PrecoCusto)
+                    TotalPrecoCusto = g.Sum(e => (double)e.PrecoCusto) // Converte para double
                 })
                 .OrderBy(p => p.ProdutoNome)
                 .ToList();
 
             return View(estoque);
         }
+
 
 
 

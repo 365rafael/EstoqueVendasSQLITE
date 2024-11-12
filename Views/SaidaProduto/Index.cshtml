@@ -59,8 +59,8 @@
         </div>
     }
     <div class="d-flex mb-3">
-        <p class="alert-info flex-fill text-center me-2">Lucro do mês anterior: R$@ViewBag.LucroMesAnterior</p>
-        <p class="alert-primary flex-fill text-center me-2">Lucro do mês atual: R$@ViewBag.LucroMesAtual</p>
+        <p class="alert-info flex-fill text-center me-2">Lucro do mês anterior: R$@string.Format("{0:F2}",ViewBag.LucroMesAnterior)</p>
+        <p class="alert-primary flex-fill text-center me-2">Lucro do mês atual: R$@string.Format("{0:F2}",ViewBag.LucroMesAtual)</p>
         <p class="alert-success flex-fill text-center">Clientes ativados nos últimos 30 dias: @ViewBag.TotalAtivadosUltimos30Dias</p>
     </div>
 
@@ -90,8 +90,8 @@
                         <td>@SaidaProduto.Produto.ProdutoNome</td>
                         <td>@SaidaProduto.Produto.Fornecedor.FornecedorNome</td>
                         <td>@SaidaProduto.NumeroSerie</td>
-                        <td>R$@SaidaProduto.PrecoVenda</td>
-                        <td>R$@SaidaProduto.LucroVenda</td>
+                        <td>R$@string.Format("{0:F2}",SaidaProduto.PrecoVenda)</td>
+                        <td>R$@string.Format("{0:F2}",SaidaProduto.LucroVenda)</td>
                         <td>
                             @if (SaidaProduto.Ativado == true)
                             {

@@ -5,40 +5,55 @@
         <h1>Estoque atual</h1>
     </div>
 
-    <table id="EntradaProdutos" class="table table-light table-hover mt-5 tabela-data-asc">
-        <thead class="table table-dark">
-            <tr>
-                <th class="order-column" scope="col">Produto</th>
-                <th>Quantidade</th>
-                <th>Preço do Estoque</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                decimal totalEstoque = 0; // Variável para armazenar o total
-                int totalProdutos = 0;
+    @if (!Model.Any())
 
-                if (Model != null)
-                {
+    {
+        <div class="alert alert-warning" role="alert">
+            Nenhum produto em estoque.
+        </div>
+    }
+
+    else
+
+    {
+        <table id="EntradaProdutos" class="table table-light table-hover mt-5 tabela-data-table">
+            <thead class="table table-dark">
+                <tr>
+                    <th class="order-column" scope="col">Produto</th>
+                    <th>Quantidade</th>
+                    <th>Preço do Estoque</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    double totalEstoque = 0; // Variável para armazenar o total
+
+                    int totalProdutos = 0;
+
+
+
                     foreach (var item in Model)
+
                     {
+
                         totalEstoque += item.TotalPrecoCusto; // Acumular o total
+
                         totalProdutos += item.Quantidade;
                         <tr>
                             <td>@item.ProdutoNome</td>
                             <td><h7 style="color:@(item.Quantidade == 1 ? "red" : "black")">@item.Quantidade</h7></td>
-                            <td>R$@item.TotalPrecoCusto</td>
+                            <td>R$@string.Format("{0:F2}", item.TotalPrecoCusto)</td> <!-- Corrige para duas casas decimais -->
                         </tr>
                     }
                 }
-            }
-        </tbody>
-        <tfoot class="table table-dark">
-            <tr>
-                <td><strong>Total do Estoque:</strong></td>
-                <td><strong>@totalProdutos un.</strong></td>
-                <td><strong>R$@totalEstoque</strong></td>
-            </tr>
-        </tfoot>
-    </table>
+            </tbody>
+            <tfoot class="table table-dark">
+                <tr>
+                    <td><strong>Total do Estoque:</strong></td>
+                    <td><strong>@totalProdutos un.</strong></td>
+                    <td><strong>R$@string.Format("{0:F2}", totalEstoque)</strong></td> <!-- Corrige para duas casas decimais -->
+                </tr>
+            </tfoot>
+        </table>
+    }
 </div>

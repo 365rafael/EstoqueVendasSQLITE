@@ -57,15 +57,15 @@
                 <tr>
                     <td>@item.ProdutoNome</td>
                     <td>@item.QuantidadeVendida</td>
-                    <td>R$@item.SomaVendas</td>
-                    <td>R$@item.LucroTotal</td>
+                    <td>R$@string.Format("{0:F2}", item.SomaVendas)</td>
+                    <td>R$@string.Format("{0:F2}", item.LucroTotal)</td>
                 </tr>
             }
             <tr>
                 <td><strong>Total do Período:</strong></td>
                 <td><strong>@ViewBag.QuantidadeTotalVendida</strong></td>
-                <td><strong>R$@ViewBag.ValorTotalVendas</strong></td>
-                <td><strong>R$@ViewBag.LucroTotalPeriodo</strong></td>
+                <td><strong>R$@string.Format("{0:F2}", ViewBag.ValorTotalVendas)</strong></td>
+                <td><strong>R$@string.Format("{0:F2}", ViewBag.LucroTotalPeriodo)</strong></td>
             </tr>
             <tr><td colspan="4"></td></tr>
             <tr>
@@ -92,8 +92,8 @@
                 <tr>
                     <td>@item.FornecedorNome</td>
                     <td>@item.QuantidadeVendida</td>
-                    <td>R$@item.SomaVendas</td>
-                    <td>R$@item.LucroTotal</td>
+                    <td>R$@string.Format("{0:F2}",item.SomaVendas)</td>
+                    <td>R$@string.Format("{0:F2}",item.LucroTotal)</td>
                 </tr>
             }
         </tbody>

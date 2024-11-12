@@ -24,17 +24,19 @@ namespace EstoqueVendasSQLITE.Controllers
 
             // Mês atual
             var primeiroDiaMesAtual = new DateTime(hoje.Year, hoje.Month, 1);
-            var lucroMesAtual = await _db.SaidaProduto
+            var lucroMesAtual = _db.SaidaProduto
                 .Where(s => s.DataSaida >= primeiroDiaMesAtual && s.DataSaida <= hoje)
-                .SumAsync(s => s.LucroVenda);
+                .AsEnumerable() // Força a execução no lado do cliente
+                .Sum(s => s.LucroVenda); // Soma com decimal
             ViewBag.LucroMesAtual = lucroMesAtual;
 
             // Mês anterior
             var primeiroDiaMesAnterior = primeiroDiaMesAtual.AddMonths(-1);
             var ultimoDiaMesAnterior = primeiroDiaMesAtual.AddDays(-1);
-            var lucroMesAnterior = await _db.SaidaProduto
+            var lucroMesAnterior = _db.SaidaProduto
                 .Where(s => s.DataSaida >= primeiroDiaMesAnterior && s.DataSaida <= ultimoDiaMesAnterior)
-                .SumAsync(s => s.LucroVenda);
+                .AsEnumerable() // Força a execução no lado do cliente
+                .Sum(s => s.LucroVenda); // Soma com decimal
             ViewBag.LucroMesAnterior = lucroMesAnterior;
 
             // Total de SaidaProduto.Ativado == true nos últimos 30 dias
@@ -55,6 +57,7 @@ namespace EstoqueVendasSQLITE.Controllers
 
             return View(SaidaProdutos);
         }
+
 
 
 
@@ -218,8 +221,8 @@ namespace EstoqueVendasSQLITE.Controllers
                 {
                     ProdutoNome = g.Key,
                     QuantidadeVendida = g.Count(),
-                    SomaVendas = g.Sum(s => s.PrecoVenda),
-                    LucroTotal = g.Sum(s => s.LucroVenda),
+                    SomaVendas = (decimal?)g.Sum(s => (double)s.PrecoVenda),  // Converte para double
+                    LucroTotal = (decimal?)g.Sum(s => (double)s.LucroVenda),  // Converte para double
                     QuantidadeAtivada = g.Where(q => q.Ativado == true).Count(),
                 })
                 .OrderBy(r => r.ProdutoNome)
@@ -246,8 +249,8 @@ namespace EstoqueVendasSQLITE.Controllers
                 {
                     FornecedorNome = g.Key,
                     QuantidadeVendida = g.Count(),
-                    SomaVendas = g.Sum(s => s.PrecoVenda),
-                    LucroTotal = g.Sum(s => s.LucroVenda)
+                    SomaVendas = (decimal?)g.Sum(s => (double)s.PrecoVenda),  // Converte para double
+                    LucroTotal = (decimal?)g.Sum(s => (double)s.LucroVenda)   // Converte para double
                 })
                 .OrderBy(f => f.FornecedorNome)
                 .ToListAsync();
@@ -256,5 +259,6 @@ namespace EstoqueVendasSQLITE.Controllers
 
             return View("Relatorio", relatorioData);
         }
+
     }
 }
