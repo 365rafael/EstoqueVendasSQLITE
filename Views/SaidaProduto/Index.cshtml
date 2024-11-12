@@ -1,0 +1,113 @@
+﻿@model IEnumerable<SaidaProduto>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1>Listagem de saídas de estoque</h1>
+        <div>
+            <a class="btn btn-outline-primary mx-2" asp-controller="SaidaProduto" asp-action="Cadastrar">Cadastrar nova saída de estoque</a>
+            <button class="btn btn-outline-success mx-2" data-bs-toggle="modal" data-bs-target="#relatorioModal">Relatório</button>
+            <a class="btn btn-outline-secondary mx-2" asp-controller="Home" asp-action="Index">Voltar</a>
+        </div>
+    </div>
+
+    <!-- Modal para selecionar as datas -->
+    <div class="modal fade" id="relatorioModal" tabindex="-1" aria-labelledby="relatorioModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="relatorioModalLabel">Gerar Relatório</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="relatorioForm" asp-controller="SaidaProduto" asp-action="Relatorio" method="post">
+                        <div class="mb-3">
+                            <label for="dataInicial" class="form-label">Data Inicial</label>
+                            <input type="date" class="form-control" id="dataInicial" name="dataInicial" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dataFinal" class="form-label">Data Final</label>
+                            <input type="date" class="form-control" id="dataFinal" name="dataFinal" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert alert-success text-dark" role="alert">
+            @TempData["MensagemSucesso"]
+        </div>
+    }
+
+    @if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert alert-danger text-light" role="alert">
+            @TempData["MensagemErro"]
+        </div>
+    }  
+    
+    @if (TempData["MensagemSemEstoque"] != null)
+    {
+        <div class="alert alert-danger text-dark" role="alert">
+            @TempData["MensagemSemEstoque"]
+        </div>
+    }
+    <div class="d-flex mb-3">
+        <p class="alert-info flex-fill text-center me-2">Lucro do mês anterior: R$@ViewBag.LucroMesAnterior</p>
+        <p class="alert-primary flex-fill text-center me-2">Lucro do mês atual: R$@ViewBag.LucroMesAtual</p>
+        <p class="alert-success flex-fill text-center">Clientes ativados nos últimos 30 dias: @ViewBag.TotalAtivadosUltimos30Dias</p>
+    </div>
+
+    <table id="SaidaProdutos" class="table table-striped tabela-data-table">
+        <thead class="table table-dark">
+            <tr>
+                <th scope="col">Data</th>
+                <th>Cliente</th>
+                <th>Produto</th>
+                <th>Fornecedor</th>
+                <th>Número de série</th>
+                <th>Preço de venda</th>
+                <th>Lucro</th>
+                <th>Ativado</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                @foreach (var SaidaProduto in Model)
+                {
+                    <tr>
+                        <td>@SaidaProduto.DataSaida.ToString("dd/MM/yyyy")</td>
+                        <td>@SaidaProduto.NomeCliente</td>
+                        <td>@SaidaProduto.Produto.ProdutoNome</td>
+                        <td>@SaidaProduto.Produto.Fornecedor.FornecedorNome</td>
+                        <td>@SaidaProduto.NumeroSerie</td>
+                        <td>R$@SaidaProduto.PrecoVenda</td>
+                        <td>R$@SaidaProduto.LucroVenda</td>
+                        <td>
+                            @if (SaidaProduto.Ativado == true)
+                            {
+                                <i class="bi bi-check-square"></i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-square"></i>
+                            }
+                        </td>
+                        <td><a asp-controller="SaidaProduto" asp-action="Editar" asp-route-id="@SaidaProduto.Id" class="btn btn-warning "><i class="bi bi-pencil-square "></i>Editar</a></td>
+                        <td><a asp-controller="SaidaProduto" asp-action="Excluir" asp-route-id="@SaidaProduto.Id" class="btn btn-danger "><i class="bi bi-trash3-fill "></i>Excluir</a></td>
+                    </tr>
+                }
+            }
+        </tbody>
+        
+    </table>
+</div>
